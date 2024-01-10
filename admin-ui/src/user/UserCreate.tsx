@@ -6,9 +6,12 @@ import {
   CreateProps,
   TextInput,
   PasswordInput,
+  ReferenceInput,
+  SelectInput,
   SelectArrayInput,
 } from "react-admin";
 
+import { ProjectTitle } from "../project/ProjectTitle";
 import { ROLES_OPTIONS } from "../user/RolesOptions";
 
 export const UserCreate = (props: CreateProps): React.ReactElement => {
@@ -18,6 +21,13 @@ export const UserCreate = (props: CreateProps): React.ReactElement => {
         <TextInput label="First Name" source="firstName" />
         <TextInput label="Last Name" source="lastName" />
         <PasswordInput label="Password" source="password" />
+        <ReferenceInput
+          source="projects.id"
+          reference="Project"
+          label="Projects"
+        >
+          <SelectInput optionText={ProjectTitle} />
+        </ReferenceInput>
         <SelectArrayInput
           source="roles"
           choices={ROLES_OPTIONS}

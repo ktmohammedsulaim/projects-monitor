@@ -15,10 +15,11 @@ import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
-import { ProjectWhereUniqueInput } from "../../project/base/ProjectWhereUniqueInput";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { BooleanNullableFilter } from "../../util/BooleanNullableFilter";
 
 @InputType()
-class UserWhereInput {
+class ProjectWhereInput {
   @ApiProperty({
     required: false,
     type: StringNullableFilter,
@@ -28,7 +29,7 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  firstName?: StringNullableFilter;
+  description?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -43,26 +44,15 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
-  lastName?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => ProjectWhereUniqueInput,
+    type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => ProjectWhereUniqueInput)
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => ProjectWhereUniqueInput, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  projects?: ProjectWhereUniqueInput;
+  lead_id?: UserWhereUniqueInput;
 
   @ApiProperty({
     required: false,
@@ -73,7 +63,18 @@ class UserWhereInput {
   @Field(() => StringFilter, {
     nullable: true,
   })
-  username?: StringFilter;
+  name?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: BooleanNullableFilter,
+  })
+  @Type(() => BooleanNullableFilter)
+  @IsOptional()
+  @Field(() => BooleanNullableFilter, {
+    nullable: true,
+  })
+  status?: BooleanNullableFilter;
 }
 
-export { UserWhereInput as UserWhereInput };
+export { ProjectWhereInput as ProjectWhereInput };

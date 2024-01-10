@@ -13,7 +13,19 @@ model User {
   id        String   @id @default(cuid())
   lastName  String?
   password  String
+  projects  Project?
   roles     Json
   updatedAt DateTime @updatedAt
   username  String   @unique
+}
+
+model Project {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  lead_id     User?    @relation(fields: [id], references: [id])
+  id          String?  @unique
+  name        String
+  status      Boolean?
+  updatedAt   DateTime @updatedAt
 }

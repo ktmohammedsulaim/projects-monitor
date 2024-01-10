@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   List,
   Datagrid,
@@ -6,34 +7,31 @@ import {
   DateField,
   TextField,
   ReferenceField,
+  BooleanField,
 } from "react-admin";
-import Pagination from "../Components/Pagination";
-import { PROJECT_TITLE_FIELD } from "../project/ProjectTitle";
 
-export const UserList = (props: ListProps): React.ReactElement => {
+import Pagination from "../Components/Pagination";
+import { USER_TITLE_FIELD } from "../user/UserTitle";
+
+export const ProjectList = (props: ListProps): React.ReactElement => {
   return (
     <List
       {...props}
       bulkActionButtons={false}
-      title={"Users"}
+      title={"Projects"}
       perPage={50}
       pagination={<Pagination />}
     >
       <Datagrid rowClick="show">
         <DateField source="createdAt" label="Created At" />
-        <TextField label="First Name" source="firstName" />
+        <TextField label="Description" source="description" />
         <TextField label="ID" source="id" />
-        <TextField label="Last Name" source="lastName" />
-        <ReferenceField
-          label="Projects"
-          source="project.id"
-          reference="Project"
-        >
-          <TextField source={PROJECT_TITLE_FIELD} />
+        <ReferenceField label="Lead" source="user.id" reference="User">
+          <TextField source={USER_TITLE_FIELD} />
         </ReferenceField>
-        <TextField label="Roles" source="roles" />
+        <TextField label="Name" source="name" />
+        <BooleanField label="Status" source="status" />
         <DateField source="updatedAt" label="Updated At" />
-        <TextField label="Username" source="username" />
       </Datagrid>
     </List>
   );

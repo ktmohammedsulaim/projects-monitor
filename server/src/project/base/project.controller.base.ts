@@ -18,130 +18,129 @@ import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import * as nestAccessControl from "nest-access-control";
 import * as defaultAuthGuard from "../../auth/defaultAuth.guard";
-import { UserService } from "../user.service";
+import { ProjectService } from "../project.service";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
-import { UserCreateInput } from "./UserCreateInput";
-import { User } from "./User";
-import { UserFindManyArgs } from "./UserFindManyArgs";
-import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
-import { UserUpdateInput } from "./UserUpdateInput";
+import { ProjectCreateInput } from "./ProjectCreateInput";
+import { Project } from "./Project";
+import { ProjectFindManyArgs } from "./ProjectFindManyArgs";
+import { ProjectWhereUniqueInput } from "./ProjectWhereUniqueInput";
+import { ProjectUpdateInput } from "./ProjectUpdateInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
-export class UserControllerBase {
+export class ProjectControllerBase {
   constructor(
-    protected readonly service: UserService,
+    protected readonly service: ProjectService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
   @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Post()
-  @swagger.ApiCreatedResponse({ type: User })
+  @swagger.ApiCreatedResponse({ type: Project })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Project",
     action: "create",
     possession: "any",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async createUser(@common.Body() data: UserCreateInput): Promise<User> {
-    return await this.service.createUser({
+  async createProject(
+    @common.Body() data: ProjectCreateInput
+  ): Promise<Project> {
+    return await this.service.createProject({
       data: {
         ...data,
 
-        projects: data.projects
+        lead_id: data.lead_id
           ? {
-              connect: data.projects,
+              connect: data.lead_id,
             }
           : undefined,
       },
       select: {
         createdAt: true,
-        firstName: true,
+        description: true,
         id: true,
-        lastName: true,
 
-        projects: {
+        lead_id: {
           select: {
             id: true,
           },
         },
 
-        roles: true,
+        name: true,
+        status: true,
         updatedAt: true,
-        username: true,
       },
     });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get()
-  @swagger.ApiOkResponse({ type: [User] })
-  @ApiNestedQuery(UserFindManyArgs)
+  @swagger.ApiOkResponse({ type: [Project] })
+  @ApiNestedQuery(ProjectFindManyArgs)
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Project",
     action: "read",
     possession: "any",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async users(@common.Req() request: Request): Promise<User[]> {
-    const args = plainToClass(UserFindManyArgs, request.query);
-    return this.service.users({
+  async projects(@common.Req() request: Request): Promise<Project[]> {
+    const args = plainToClass(ProjectFindManyArgs, request.query);
+    return this.service.projects({
       ...args,
       select: {
         createdAt: true,
-        firstName: true,
+        description: true,
         id: true,
-        lastName: true,
 
-        projects: {
+        lead_id: {
           select: {
             id: true,
           },
         },
 
-        roles: true,
+        name: true,
+        status: true,
         updatedAt: true,
-        username: true,
       },
     });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Project",
     action: "read",
     possession: "own",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async user(
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<User | null> {
-    const result = await this.service.user({
+  async project(
+    @common.Param() params: ProjectWhereUniqueInput
+  ): Promise<Project | null> {
+    const result = await this.service.project({
       where: params,
       select: {
         createdAt: true,
-        firstName: true,
+        description: true,
         id: true,
-        lastName: true,
 
-        projects: {
+        lead_id: {
           select: {
             id: true,
           },
         },
 
-        roles: true,
+        name: true,
+        status: true,
         updatedAt: true,
-        username: true,
       },
     });
     if (result === null) {
@@ -154,47 +153,46 @@ export class UserControllerBase {
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Patch("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Project",
     action: "update",
     possession: "any",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async updateUser(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() data: UserUpdateInput
-  ): Promise<User | null> {
+  async updateProject(
+    @common.Param() params: ProjectWhereUniqueInput,
+    @common.Body() data: ProjectUpdateInput
+  ): Promise<Project | null> {
     try {
-      return await this.service.updateUser({
+      return await this.service.updateProject({
         where: params,
         data: {
           ...data,
 
-          projects: data.projects
+          lead_id: data.lead_id
             ? {
-                connect: data.projects,
+                connect: data.lead_id,
               }
             : undefined,
         },
         select: {
           createdAt: true,
-          firstName: true,
+          description: true,
           id: true,
-          lastName: true,
 
-          projects: {
+          lead_id: {
             select: {
               id: true,
             },
           },
 
-          roles: true,
+          name: true,
+          status: true,
           updatedAt: true,
-          username: true,
         },
       });
     } catch (error) {
@@ -208,37 +206,36 @@ export class UserControllerBase {
   }
 
   @common.Delete("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Project",
     action: "delete",
     possession: "any",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async deleteUser(
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<User | null> {
+  async deleteProject(
+    @common.Param() params: ProjectWhereUniqueInput
+  ): Promise<Project | null> {
     try {
-      return await this.service.deleteUser({
+      return await this.service.deleteProject({
         where: params,
         select: {
           createdAt: true,
-          firstName: true,
+          description: true,
           id: true,
-          lastName: true,
 
-          projects: {
+          lead_id: {
             select: {
               id: true,
             },
           },
 
-          roles: true,
+          name: true,
+          status: true,
           updatedAt: true,
-          username: true,
         },
       });
     } catch (error) {

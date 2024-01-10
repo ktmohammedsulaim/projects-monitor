@@ -11,15 +11,17 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, ValidateNested } from "class-validator";
-import { ProjectWhereUniqueInput } from "../../project/base/ProjectWhereUniqueInput";
+import {
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsBoolean,
+} from "class-validator";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { Type } from "class-transformer";
-import { IsJSONValue } from "../../validators";
-import { GraphQLJSON } from "graphql-type-json";
-import { InputJsonValue } from "../../types";
 
 @InputType()
-class UserCreateInput {
+class ProjectCreateInput {
   @ApiProperty({
     required: false,
     type: String,
@@ -29,45 +31,19 @@ class UserCreateInput {
   @Field(() => String, {
     nullable: true,
   })
-  firstName?: string | null;
+  description?: string | null;
 
   @ApiProperty({
     required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  lastName?: string | null;
-
-  @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @Field(() => String)
-  password!: string;
-
-  @ApiProperty({
-    required: false,
-    type: () => ProjectWhereUniqueInput,
+    type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => ProjectWhereUniqueInput)
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => ProjectWhereUniqueInput, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  projects?: ProjectWhereUniqueInput | null;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsJSONValue()
-  @Field(() => GraphQLJSON)
-  roles!: InputJsonValue;
+  lead_id?: UserWhereUniqueInput | null;
 
   @ApiProperty({
     required: true,
@@ -75,7 +51,18 @@ class UserCreateInput {
   })
   @IsString()
   @Field(() => String)
-  username!: string;
+  name!: string;
+
+  @ApiProperty({
+    required: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Field(() => Boolean, {
+    nullable: true,
+  })
+  status?: boolean | null;
 }
 
-export { UserCreateInput as UserCreateInput };
+export { ProjectCreateInput as ProjectCreateInput };
